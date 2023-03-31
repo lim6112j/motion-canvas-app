@@ -1,28 +1,17 @@
 import { makeScene2D } from "@motion-canvas/2d/lib/scenes";
+import { waitFor } from "@motion-canvas/core/lib/flow";
 import { Circle } from "@motion-canvas/2d/lib/components";
-import { Node } from "@motion-canvas/2d/lib/components/Node";
 import { createRef } from "@motion-canvas/core/lib/utils";
+import { all } from "@motion-canvas/core/lib/flow";
 
 export default makeScene2D(function* (view) {
   // Create your animations here
-
-  const circleA = createRef<Node>();
-  const circleB = createRef<Node>();
-
+  const myCircle = createRef<Circle>();
   view.add(
-    <>
-      <Node position={[200, 100]}>
-        <Circle
-          position={[0, 100]}
-          ref={circleA}
-          width={20}
-          height={20}
-          fill={"white"}
-        />
-      </Node>
-      <Circle ref={circleB} width={100} height={100} fill={"red"} />
-    </>
+    <Circle ref={myCircle} x={-300} width={140} height={140} fill="#e13338" />
   );
-
-  yield* circleB().absolutePosition(circleA().absolutePosition());
+  yield* all(
+    myCircle().position.x(300, 1).to(-300, 1),
+    myCircle().fill("#efa500", 1).to("#e13338", 1)
+  );
 });
