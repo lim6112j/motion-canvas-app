@@ -1,22 +1,21 @@
 import { makeScene2D } from "@motion-canvas/2d/lib/scenes";
+import {
+  CodeBlock,
+  lines,
+  insert,
+  edit,
+  remove,
+} from "@motion-canvas/2d/lib/components/CodeBlock";
+import { createRef } from "@motion-canvas/core/lib/utils";
 import { waitFor } from "@motion-canvas/core/lib/flow";
-import { Circle, Txt } from "@motion-canvas/2d/lib/components";
-import { beginSlide, createRef } from "@motion-canvas/core/lib/utils";
-import { all } from "@motion-canvas/core/lib/flow";
 
 export default makeScene2D(function* (view) {
-  const title = createRef<Txt>();
-  view.add(<Txt ref={title} />);
+  const codeRef = createRef<CodeBlock>();
+  yield view.add(<CodeBlock ref={codeRef} code={`var myBool;`} />);
 
-  title().text('FIRST SLIDE');
-  yield* beginSlide('first slide');
-  yield* waitFor(1); // try doing some actual animations here
-
-  title().text('SECOND SLIDE');
-  yield* beginSlide('second slide');
+  yield* codeRef().edit(1.2)`var myBool${insert(" = true")};`;
   yield* waitFor(1);
-
-  title().text('LAST SLIDE');
-  yield* beginSlide('last slide');
+  yield* codeRef().edit(1.2)`var myBool = ${edit("true", "false")};`;
   yield* waitFor(1);
+  yield* codeRef().edit(1.2)`var myBool${remove(" = false")};`;
 });
